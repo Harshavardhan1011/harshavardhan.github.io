@@ -1,0 +1,2849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Devaraj Sindagi — Photographer · Editor · Gamer</title>
+<meta name="description" content="First-year engineering student at BIT, Bengaluru. Photographer, video editor, color grader & gamer with 3+ years of creative practice.">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800;1,900&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  *, *::before, *::after { font-style: italic; }
+
+  :root {
+    --black: #0a0806;
+    --white: #f5efe6;
+    --cream: #e8dcc8;
+    --amber: #ff8c3a;
+    --amber-dark: #d96a1f;
+    --rust: #ff5e3a;
+    --slate: #1a130d;
+    --muted: #8a7a6c;
+    --border: rgba(255,140,58,0.18);
+    --font-display: 'Playfair Display', serif;
+    --font-serif: 'Playfair Display', serif;
+    --font-body: 'Playfair Display', serif;
+    --font-script: 'Dancing Script', cursive;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background: var(--amber);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease, background 0.2s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(255,140,58,0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.35s cubic-bezier(0.22,1,0.36,1), width 0.25s, height 0.25s;
+  }
+  .cursor.active { transform: scale(0.3); }
+  .cursor-ring.active { width: 60px; height: 60px; }
+
+  /* Loader */
+  #loader {
+    position: fixed;
+    inset: 0;
+    background: var(--black);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 24px;
+    transition: opacity 0.7s ease, visibility 0.7s ease;
+  }
+  #loader.hidden { opacity: 0; visibility: hidden; }
+  .loader-name {
+    font-family: var(--font-display);
+    font-size: clamp(48px, 12vw, 120px);
+    letter-spacing: 0.05em;
+    color: var(--white);
+    line-height: 1;
+    overflow: hidden;
+  }
+  .loader-name span {
+    display: inline-block;
+    animation: slideUp 0.9s cubic-bezier(0.22,1,0.36,1) forwards;
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  .loader-name span:nth-child(2) { animation-delay: 0.12s; color: var(--amber); }
+  .loader-name .loader-script {
+    font-family: var(--font-script);
+    font-weight: 700;
+    font-size: 1.15em;
+    margin-left: 0.15em;
+    vertical-align: baseline;
+  }
+  .loader-bar {
+    width: 200px;
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+  .loader-bar::after {
+    content: '';
+    position: absolute;
+    left: -100%;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--amber);
+    animation: load 1.4s ease forwards;
+  }
+  @keyframes load { to { left: 0; } }
+  @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+
+  /* Nav */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 24px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    mix-blend-mode: normal;
+  }
+  nav::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(8,8,8,0.9) 0%, transparent 100%);
+    backdrop-filter: blur(0px);
+    pointer-events: none;
+  }
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 22px;
+    letter-spacing: 0.1em;
+    color: var(--white);
+    text-decoration: none;
+    position: relative;
+    z-index: 1;
+  }
+  .nav-logo span { color: var(--amber); }
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+    position: relative;
+    z-index: 1;
+  }
+  .nav-links a {
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.25s ease;
+  }
+  .nav-links a:hover { color: var(--white); }
+
+  /* Hero */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 80% 20%, rgba(255,140,58,0.08) 0%, transparent 55%),
+      radial-gradient(ellipse at 10% 80%, rgba(255,94,58,0.06) 0%, transparent 45%),
+      var(--black);
+  }
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,140,58,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,140,58,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse at center, transparent 30%, black 80%);
+  }
+  .hero-label {
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 28px;
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeIn 0.8s ease 1.8s forwards;
+  }
+  .hero-label::before {
+    content: '';
+    display: inline-block;
+    width: 40px;
+    height: 1px;
+    background: var(--amber);
+    margin-right: 16px;
+    vertical-align: middle;
+  }
+  .hero-name {
+    font-family: var(--font-display);
+    font-size: clamp(80px, 18vw, 220px);
+    line-height: 0.88;
+    letter-spacing: -0.01em;
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeIn 1s ease 1.9s forwards;
+  }
+  .hero-name .line-2 {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255,140,58,0.6);
+  }
+  .hero-name .line-2.script-name {
+    font-family: var(--font-script);
+    font-weight: 700;
+    font-size: 0.62em;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    margin-top: 0.08em;
+    display: block;
+    -webkit-text-stroke: 1.5px rgba(255,140,58,0.7);
+  }
+  .hero-name .line-2.script-name .accent {
+    -webkit-text-stroke: 0;
+    color: var(--amber);
+  }
+  .hero-name .accent { color: var(--amber); }
+  .hero-sub {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-top: 48px;
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeIn 0.8s ease 2.1s forwards;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .hero-desc {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--muted);
+    max-width: 420px;
+    font-weight: 300;
+  }
+  .hero-desc strong { color: var(--white); font-weight: 500; }
+  .hero-scroll {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--amber), transparent);
+    animation: scrollAnim 2s ease infinite;
+  }
+  @keyframes scrollAnim {
+    0%, 100% { transform: scaleY(1); opacity: 1; }
+    50% { transform: scaleY(0.6); opacity: 0.4; }
+  }
+  .roles-ticker {
+    position: absolute;
+    right: 48px;
+    bottom: 100px;
+    font-family: var(--font-display);
+    font-size: 13px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+  @keyframes fadeIn { to { opacity: 1; } }
+
+  /* Marquee */
+  .marquee-section {
+    overflow: hidden;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 0;
+    background: rgba(255,140,58,0.03);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 0;
+    white-space: nowrap;
+    animation: marquee 20s linear infinite;
+  }
+  .marquee-item {
+    font-family: var(--font-display);
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0 48px;
+    flex-shrink: 0;
+  }
+  .marquee-item span { color: var(--amber); margin-right: 48px; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* Section base */
+  section {
+    padding: 120px 48px;
+    position: relative;
+  }
+  .section-tag {
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--amber);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 64px;
+  }
+  .section-tag::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+    max-width: 80px;
+  }
+
+  /* About */
+  #about {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .about-left {}
+  .about-heading {
+    font-family: var(--font-serif);
+    font-size: clamp(36px, 5vw, 64px);
+    line-height: 1.1;
+    margin-bottom: 32px;
+    font-style: italic;
+  }
+  .about-heading em { color: var(--amber); font-style: normal; }
+  .about-body {
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--muted);
+    font-weight: 300;
+    margin-bottom: 24px;
+  }
+  .about-body strong { color: var(--white); font-weight: 400; }
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 48px;
+  }
+  .stat-box {
+    background: var(--black);
+    padding: 28px 24px;
+  }
+  .stat-box:hover { background: rgba(255,140,58,0.04); }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 52px;
+    color: var(--amber);
+    line-height: 1;
+    display: block;
+  }
+  .stat-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 6px;
+    display: block;
+  }
+  .about-right {
+    position: relative;
+    padding-top: 48px;
+  }
+  .profile-card {
+    background: var(--slate);
+    border: 1px solid var(--border);
+    padding: 40px;
+    position: relative;
+  }
+  .profile-card::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 40px;
+    width: 80px;
+    height: 2px;
+    background: var(--amber);
+  }
+  .profile-initial {
+    width: 90px;
+    height: 90px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    background: rgba(255,140,58,0.06);
+  }
+  .profile-initial span {
+    font-family: var(--font-display);
+    font-size: 42px;
+    color: var(--amber);
+    line-height: 1;
+  }
+  .profile-name {
+    font-family: var(--font-display);
+    font-size: 28px;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+  .profile-role {
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 24px;
+  }
+  .profile-detail {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .profile-detail .dot {
+    width: 5px;
+    height: 5px;
+    background: var(--amber);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .skills-grid {
+    margin-top: 40px;
+  }
+  .skill-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .skill-row:last-child { border-bottom: none; }
+  .skill-name {
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--white);
+    min-width: 140px;
+    font-weight: 500;
+  }
+  .skill-bar {
+    flex: 1;
+    height: 2px;
+    background: rgba(255,255,255,0.06);
+    position: relative;
+    overflow: hidden;
+  }
+  .skill-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--amber), var(--rust));
+    width: 0;
+    transition: width 1.2s cubic-bezier(0.22,1,0.36,1);
+  }
+  .skill-pct {
+    font-family: var(--font-display);
+    font-size: 14px;
+    color: var(--amber);
+    min-width: 36px;
+    text-align: right;
+  }
+
+  /* Projects */
+  #projects { background: rgba(255,255,255,0.01); }
+  .projects-heading {
+    font-family: var(--font-display);
+    font-size: clamp(48px, 10vw, 120px);
+    letter-spacing: -0.01em;
+    line-height: 0.9;
+    margin-bottom: 80px;
+  }
+  .projects-heading .line-ghost {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255,255,255,0.12);
+    display: block;
+  }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+  .project-card {
+    background: var(--slate);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    group: true;
+    transition: background 0.3s ease;
+  }
+  .project-card:hover { background: #1f1f1f; }
+  .project-card:hover .project-arrow { transform: translate(4px,-4px); }
+  .project-card:hover .project-img-bg { transform: scale(1.04); }
+  .project-img-wrap {
+    height: 220px;
+    overflow: hidden;
+    background: #111;
+    position: relative;
+  }
+  .project-img-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.55;
+    transition: transform 0.6s cubic-bezier(0.22,1,0.36,1);
+    filter: saturate(0.7);
+  }
+  .project-img-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 40%, var(--slate) 100%);
+  }
+  .project-category {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--amber);
+    background: rgba(8,8,8,0.7);
+    padding: 4px 10px;
+    backdrop-filter: blur(4px);
+  }
+  .project-year {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-family: var(--font-display);
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .project-body { padding: 28px 32px 32px; }
+  .project-title {
+    font-family: var(--font-display);
+    font-size: 26px;
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .project-arrow {
+    color: var(--amber);
+    font-size: 20px;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+  }
+  .project-desc {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--muted);
+    margin-bottom: 20px;
+    font-weight: 300;
+  }
+  .project-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .tag {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+  }
+
+  /* Experience */
+  #experience { }
+  .exp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+  .exp-card {
+    background: var(--slate);
+    padding: 40px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    transition: background 0.3s ease;
+  }
+  .exp-card:hover { background: #1f1f1f; }
+  .exp-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--amber);
+    transition: width 0.5s ease;
+  }
+  .exp-card:hover::after { width: 100%; }
+  .exp-year {
+    font-family: var(--font-display);
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    color: var(--amber);
+    margin-bottom: 16px;
+  }
+  .exp-role {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-style: italic;
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+  .exp-company {
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .exp-desc {
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  /* Contact */
+  #contact {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+    background: var(--slate);
+  }
+  .contact-heading {
+    font-family: var(--font-display);
+    font-size: clamp(52px, 9vw, 110px);
+    line-height: 0.88;
+    letter-spacing: -0.01em;
+    margin-bottom: 48px;
+  }
+  .contact-heading .ghost {
+    display: block;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255,140,58,0.3);
+  }
+  .contact-info {
+    margin-bottom: 48px;
+  }
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.25s ease;
+  }
+  .contact-item:hover { color: var(--amber); }
+  .contact-item:hover .ci-icon { background: rgba(255,140,58,0.15); }
+  .ci-icon {
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: background 0.25s ease;
+    flex-shrink: 0;
+  }
+  .ci-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 2px;
+  }
+  .ci-value { font-size: 14px; font-weight: 400; }
+  .social-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 40px;
+  }
+  .social-btn {
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 16px;
+    transition: all 0.25s ease;
+  }
+  .social-btn:hover {
+    color: var(--amber);
+    border-color: var(--amber);
+    background: rgba(255,140,58,0.06);
+  }
+  .contact-right { }
+  .resume-cta {
+    border: 1px solid var(--border);
+    padding: 40px;
+    margin-bottom: 32px;
+    background: rgba(255,140,58,0.03);
+    position: relative;
+    overflow: hidden;
+  }
+  .resume-cta::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, var(--amber), transparent);
+  }
+  .resume-cta h3 {
+    font-family: var(--font-serif);
+    font-size: 26px;
+    font-style: italic;
+    margin-bottom: 16px;
+  }
+  .resume-cta p {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--muted);
+    margin-bottom: 28px;
+    font-weight: 300;
+  }
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--amber);
+    color: var(--black);
+    padding: 14px 28px;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.25s ease;
+  }
+  .btn-primary:hover { background: var(--amber-dark); }
+  .testimonial-card {
+    border: 1px solid var(--border);
+    padding: 32px;
+    position: relative;
+  }
+  .testimonial-card::before {
+    content: '"';
+    font-family: var(--font-serif);
+    font-size: 80px;
+    color: rgba(255,140,58,0.1);
+    position: absolute;
+    top: 8px;
+    left: 24px;
+    line-height: 1;
+  }
+  .testimonial-quote {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--cream);
+    margin-bottom: 20px;
+    padding-top: 20px;
+  }
+  .testimonial-author {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .testimonial-author span { color: var(--amber); }
+
+  /* Footer */
+  footer {
+    padding: 40px 48px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--black);
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .footer-copy {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .footer-name {
+    font-family: var(--font-display);
+    font-size: 15px;
+    letter-spacing: 0.1em;
+    color: var(--white);
+  }
+  .footer-name span { color: var(--amber); }
+
+  /* Scroll animations */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.22,1,0.36,1);
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* ═══════════════════════════════════════════
+     MODAL / LIGHTBOX SYSTEM
+  ═══════════════════════════════════════════ */
+
+  /* Clickable card indicator */
+  .project-card[data-modal] {
+    cursor: pointer;
+  }
+  .project-card[data-modal] .project-arrow {
+    position: relative;
+  }
+  .open-indicator {
+    position: absolute;
+    bottom: 16px;
+    right: 20px;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--amber);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .project-card[data-modal]:hover .open-indicator { opacity: 1; }
+
+  /* Overlay backdrop */
+  .hvr-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(4,4,4,0.97);
+    z-index: 8000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s cubic-bezier(0.22,1,0.36,1), visibility 0.5s;
+    backdrop-filter: blur(12px);
+  }
+  .hvr-modal-backdrop.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Modal container */
+  .hvr-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 8100;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.45s cubic-bezier(0.22,1,0.36,1), visibility 0.45s;
+    overflow-y: auto;
+  }
+  .hvr-modal.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Modal close button */
+  .modal-close {
+    position: fixed;
+    top: 28px;
+    right: 36px;
+    z-index: 8200;
+    width: 48px;
+    height: 48px;
+    border: 1px solid rgba(255,140,58,0.3);
+    background: rgba(8,8,8,0.8);
+    color: var(--white);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.25s, background 0.25s;
+    backdrop-filter: blur(8px);
+  }
+  .modal-close:hover {
+    border-color: var(--amber);
+    background: rgba(255,140,58,0.1);
+    color: var(--amber);
+  }
+
+  /* Modal header */
+  .modal-header {
+    padding: 48px 64px 32px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    transform: translateY(-20px);
+    transition: transform 0.5s cubic-bezier(0.22,1,0.36,1) 0.1s;
+  }
+  .hvr-modal.open .modal-header { transform: translateY(0); }
+  .modal-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .modal-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 30px;
+    height: 1px;
+    background: var(--amber);
+  }
+  .modal-title {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 6vw, 72px);
+    letter-spacing: 0.02em;
+    line-height: 0.9;
+    margin-bottom: 16px;
+  }
+  .modal-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 600px;
+    line-height: 1.7;
+  }
+
+  /* ── PHOTO LIGHTBOX ── */
+  .photo-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+    padding: 32px 64px 64px;
+    flex: 1;
+  }
+  .photo-gallery-grid .photo-thumb {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 3/2;
+    cursor: pointer;
+    background: #111;
+  }
+  .photo-gallery-grid .photo-thumb:first-child {
+    grid-column: span 2;
+    aspect-ratio: 16/9;
+  }
+  .photo-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.7;
+    filter: saturate(0.65);
+    transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.22,1,0.36,1), filter 0.5s ease;
+  }
+  .photo-thumb:hover img {
+    opacity: 1;
+    transform: scale(1.04);
+    filter: saturate(1);
+  }
+  .photo-thumb-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(8,8,8,0.6) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .photo-thumb:hover .photo-thumb-overlay { opacity: 1; }
+  .photo-thumb-label {
+    position: absolute;
+    bottom: 14px;
+    left: 16px;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--white);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .photo-thumb:hover .photo-thumb-label { opacity: 1; transform: translateY(0); }
+
+  /* Full lightbox viewer */
+  .lightbox-viewer {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    background: rgba(4,4,4,0.98);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s;
+  }
+  .lightbox-viewer.open {
+    opacity: 1;
+    visibility: visible;
+  }
+  .lightbox-img-wrap {
+    position: relative;
+    max-width: 88vw;
+    max-height: 82vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .lightbox-img-wrap img {
+    max-width: 100%;
+    max-height: 82vh;
+    object-fit: contain;
+    display: block;
+    filter: saturate(0.8);
+    transition: filter 0.4s ease;
+  }
+  .lightbox-img-wrap img:hover { filter: saturate(1); }
+  .lightbox-nav {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 52px;
+    height: 52px;
+    border: 1px solid rgba(255,140,58,0.3);
+    background: rgba(8,8,8,0.7);
+    color: var(--amber);
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.25s, background 0.25s;
+    backdrop-filter: blur(4px);
+    z-index: 9100;
+  }
+  .lightbox-nav:hover { border-color: var(--amber); background: rgba(255,140,58,0.12); }
+  .lightbox-prev { left: 24px; }
+  .lightbox-next { right: 24px; }
+  .lightbox-close {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 9100;
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgba(255,140,58,0.3);
+    background: rgba(8,8,8,0.7);
+    color: var(--white);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s;
+  }
+  .lightbox-close:hover { border-color: var(--amber); color: var(--amber); }
+  .lightbox-counter {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 9100;
+  }
+  .lb-dot {
+    width: 6px;
+    height: 6px;
+    border: 1px solid rgba(255,140,58,0.4);
+    border-radius: 50%;
+    transition: background 0.3s, border-color 0.3s;
+    cursor: pointer;
+  }
+  .lb-dot.active {
+    background: var(--amber);
+    border-color: var(--amber);
+  }
+  .lightbox-caption {
+    position: fixed;
+    bottom: 52px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+    z-index: 9100;
+  }
+
+  /* ── VIDEO MODAL ── */
+  .video-showcase {
+    padding: 32px 64px 64px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px;
+    flex: 1;
+  }
+  .video-showcase.single {
+    grid-template-columns: 1fr;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .video-card {
+    background: #0d0d0d;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    position: relative;
+    transition: border-color 0.3s;
+  }
+  .video-card:hover { border-color: rgba(255,140,58,0.35); }
+  .video-player-wrap {
+    position: relative;
+    aspect-ratio: 16/9;
+    background: #070707;
+    overflow: hidden;
+  }
+  .video-player-wrap iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+  .video-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .video-placeholder img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.35;
+    filter: saturate(0.4);
+    transition: opacity 0.4s, transform 0.6s cubic-bezier(0.22,1,0.36,1), filter 0.4s;
+  }
+  .video-placeholder:hover img {
+    opacity: 0.55;
+    transform: scale(1.04);
+    filter: saturate(0.7);
+  }
+  .video-play-btn {
+    position: relative;
+    z-index: 1;
+    width: 64px;
+    height: 64px;
+    border: 1px solid rgba(255,140,58,0.5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: var(--amber);
+    transition: background 0.3s, border-color 0.3s, transform 0.3s;
+  }
+  .video-placeholder:hover .video-play-btn {
+    background: rgba(255,140,58,0.15);
+    border-color: var(--amber);
+    transform: scale(1.1);
+  }
+  .video-placeholder-label {
+    position: relative;
+    z-index: 1;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .video-info {
+    padding: 20px 24px;
+    border-top: 1px solid var(--border);
+  }
+  .video-info-title {
+    font-family: var(--font-display);
+    font-size: 18px;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+    color: var(--white);
+  }
+  .video-info-meta {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    gap: 16px;
+  }
+  .video-info-meta span { color: var(--amber); }
+
+  /* ── GAMING / RGB MODAL ── */
+  .gaming-modal .modal-header {
+    border-color: rgba(255,140,58,0.12);
+  }
+  .gaming-modal .modal-eyebrow { color: #ff8c3a; }
+  .gaming-modal .modal-eyebrow::before { background: #ff8c3a; }
+  .gaming-modal .video-card {
+    border-color: rgba(255,140,58,0.1);
+  }
+  .gaming-modal .video-card:hover {
+    border-color: rgba(255,140,58,0.35);
+    box-shadow: 0 0 30px rgba(255,140,58,0.06);
+  }
+  .gaming-modal .video-play-btn {
+    border-color: rgba(255,140,58,0.4);
+    color: #ff8c3a;
+  }
+  .gaming-modal .video-placeholder:hover .video-play-btn {
+    background: rgba(255,140,58,0.1);
+    border-color: #ff8c3a;
+  }
+  .rgb-scanline {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255,140,58,0.015) 2px,
+      rgba(255,140,58,0.015) 4px
+    );
+    z-index: 2;
+  }
+  .rgb-corner {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    z-index: 3;
+  }
+  .rgb-corner.tl { top: 6px; left: 6px; border-top: 1px solid #ff8c3a; border-left: 1px solid #ff8c3a; }
+  .rgb-corner.tr { top: 6px; right: 6px; border-top: 1px solid #ff8c3a; border-right: 1px solid #ff8c3a; }
+  .rgb-corner.bl { bottom: 6px; left: 6px; border-bottom: 1px solid #ff8c3a; border-left: 1px solid #ff8c3a; }
+  .rgb-corner.br { bottom: 6px; right: 6px; border-bottom: 1px solid #ff8c3a; border-right: 1px solid #ff8c3a; }
+  @keyframes rgbPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255,140,58,0); }
+    50% { box-shadow: 0 0 20px 2px rgba(255,140,58,0.08); }
+  }
+  .gaming-modal .video-card { animation: rgbPulse 3s ease infinite; }
+  .gaming-modal .video-card:nth-child(2) { animation-delay: 1.5s; }
+
+  /* ── COLOR STUDY MODAL ── */
+  .color-modal .modal-eyebrow { color: var(--rust); }
+  .color-modal .modal-eyebrow::before { background: var(--rust); }
+  .color-chips {
+    display: flex;
+    gap: 3px;
+    padding: 0 64px 32px;
+    flex-shrink: 0;
+  }
+  .color-chip {
+    height: 4px;
+    flex: 1;
+    transition: height 0.3s ease;
+  }
+  .color-chip:hover { height: 8px; }
+  .color-modal .video-card:hover { border-color: rgba(255,94,58,0.4); }
+  .color-modal .video-play-btn { border-color: rgba(255,94,58,0.5); color: var(--rust); }
+  .color-modal .video-placeholder:hover .video-play-btn {
+    background: rgba(255,94,58,0.12);
+    border-color: var(--rust);
+  }
+  .grade-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--rust);
+    background: rgba(8,8,8,0.8);
+    padding: 4px 10px;
+    border: 1px solid rgba(255,94,58,0.25);
+    backdrop-filter: blur(4px);
+    z-index: 3;
+  }
+
+  /* Upload prompt notice */
+  .upload-notice {
+    margin: 0 64px 24px;
+    padding: 16px 20px;
+    border: 1px solid rgba(255,140,58,0.2);
+    background: rgba(255,140,58,0.03);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .upload-notice-icon { color: var(--amber); font-size: 16px; flex-shrink: 0; }
+  .upload-notice p {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+    font-weight: 300;
+  }
+  .upload-notice strong { color: var(--white); font-weight: 400; }
+
+  /* Responsive modals */
+  @media (max-width: 900px) {
+    .modal-header { padding: 48px 24px 28px; }
+    .photo-gallery-grid { grid-template-columns: 1fr 1fr; padding: 24px; }
+    .photo-gallery-grid .photo-thumb:first-child { grid-column: span 2; }
+    .video-showcase { grid-template-columns: 1fr; padding: 24px; }
+    .color-chips { padding: 0 24px 24px; }
+    .upload-notice { margin: 0 24px 20px; }
+    .modal-close { top: 16px; right: 16px; }
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    nav { padding: 20px 24px; }
+    nav .nav-links { display: none; }
+    section { padding: 80px 24px; }
+    #hero { padding: 0 24px 60px; }
+    #about, #contact { grid-template-columns: 1fr; gap: 48px; }
+    .projects-grid, .exp-grid { grid-template-columns: 1fr; }
+    .hero-sub { flex-direction: column; align-items: flex-start; }
+    .roles-ticker { display: none; }
+    .about-stats { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Loader -->
+<div id="loader">
+  <div class="loader-name">
+    <span>DEVARAJ</span><span class="loader-script">Sindagi</span>
+  </div>
+  <div class="loader-bar"></div>
+</div>
+
+<!-- Navigation -->
+<nav>
+  <a class="nav-logo" href="#hero">DS<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Work</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-label">Bengaluru, Karnataka · India</div>
+  <h1 class="hero-name">
+    <div>DEVARAJ</div>
+    <div class="line-2 script-name">Sindagi<span class="accent">.</span></div>
+  </h1>
+  <div class="hero-sub">
+    <p class="hero-desc">
+      First-year engineering student at <strong>BIT</strong> — Electrical & Instrumentation.
+      Professional <strong>photographer, video editor, color grader</strong> & gamer with
+      <strong>3+ years</strong> of obsessive creative practice.
+    </p>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      Scroll
+    </div>
+  </div>
+  <div class="roles-ticker">Motion · Photo · Color · Game · Code</div>
+</section>
+
+<!-- Marquee -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <div class="marquee-item"><span>★</span>Photography</div>
+    <div class="marquee-item"><span>★</span>Video Editing</div>
+    <div class="marquee-item"><span>★</span>Color Grading</div>
+    <div class="marquee-item"><span>★</span>Motion Graphics</div>
+    <div class="marquee-item"><span>★</span>Gaming</div>
+    <div class="marquee-item"><span>★</span>Engineering</div>
+    <div class="marquee-item"><span>★</span>Photography</div>
+    <div class="marquee-item"><span>★</span>Video Editing</div>
+    <div class="marquee-item"><span>★</span>Color Grading</div>
+    <div class="marquee-item"><span>★</span>Motion Graphics</div>
+    <div class="marquee-item"><span>★</span>Gaming</div>
+    <div class="marquee-item"><span>★</span>Engineering</div>
+  </div>
+</div>
+
+<!-- About -->
+<section id="about">
+  <div class="about-left reveal">
+    <div class="section-tag">About Me</div>
+    <h2 class="about-heading">Creative <em>with</em><br>a technical<br>backbone</h2>
+    <p class="about-body">I'm a first-year <strong>Electrical & Instrumentation Engineering</strong> student at BIT College, Bengaluru — balancing academics with a relentless creative practice built over 3+ years.</p>
+    <p class="about-body">My work spans <strong>portrait and cinematic photography</strong>, short-form and long-form video editing, color science, motion graphics, and gaming highlight reels. Every frame I shoot or edit is a deliberate choice — not an accident.</p>
+    <p class="about-body">Gaming sharpened my <strong>strategy, reflexes, and problem-solving</strong>. Photography trained my eye. Editing taught me patience. Engineering is teaching me precision.</p>
+    <div class="about-stats">
+      <div class="stat-box">
+        <span class="stat-num">3+</span>
+        <span class="stat-label">Years Creative</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num">∞</span>
+        <span class="stat-label">Frames Shot</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num">BIT</span>
+        <span class="stat-label">Engineering</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num">MG</span>
+        <span class="stat-label">Motion Art</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-right reveal">
+    <div class="profile-card">
+      <div class="profile-initial"><span>D</span></div>
+      <div class="profile-name">DEVARAJ SINDAGI</div>
+      <div class="profile-role">Developer · Photographer · Gamer</div>
+      <div class="profile-detail"><span class="dot"></span>Bengaluru, Karnataka, India</div>
+      <div class="profile-detail"><span class="dot"></span>devarajsindagi4@gmail.com</div>
+      <div class="profile-detail"><span class="dot"></span>BIT College — Elec. & Instrumentation</div>
+      <div class="profile-detail"><span class="dot"></span>Open to creative collaborations · 2025</div>
+    </div>
+
+    <div class="skills-grid">
+      <div class="skill-row">
+        <span class="skill-name">Photography</span>
+        <div class="skill-bar"><div class="skill-fill" data-w="92"></div></div>
+        <span class="skill-pct">92</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">Video Editing</span>
+        <div class="skill-bar"><div class="skill-fill" data-w="90"></div></div>
+        <span class="skill-pct">90</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">Color Grading</span>
+        <div class="skill-bar"><div class="skill-fill" data-w="86"></div></div>
+        <span class="skill-pct">86</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">Motion Graphics</span>
+        <div class="skill-bar"><div class="skill-fill" data-w="80"></div></div>
+        <span class="skill-pct">80</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">Coding</span>
+        <div class="skill-bar"><div class="skill-fill" data-w="70"></div></div>
+        <span class="skill-pct">70</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">Gaming</span>
+        <div class="skill-bar"><div class="skill-fill" data-w="95"></div></div>
+        <span class="skill-pct">95</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Projects -->
+<section id="projects">
+  <div class="section-tag reveal">Selected Work</div>
+  <h2 class="projects-heading reveal">
+    MY<br>
+    <span class="line-ghost">CREATIVE</span>
+    WORK
+  </h2>
+  <div class="projects-grid">
+    <div class="project-card reveal" data-modal="cinematic" tabindex="0" role="button" aria-label="Open Cinematic Frames gallery">
+      <div class="project-img-wrap">
+        <img class="project-img-bg" src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=800&q=80" alt="Cinematic Frames">
+        <div class="project-img-overlay"></div>
+        <div class="project-category">Photography</div>
+        <div class="project-year">2025</div>
+      </div>
+      <div class="project-body">
+        <div class="project-title">
+          Cinematic Frames
+          <span class="project-arrow">↗</span>
+        </div>
+        <p class="project-desc">A personal photo series exploring light, mood, and Bengaluru after dark — shot on prime lenses, graded for warmth and depth.</p>
+        <div class="project-tags">
+          <span class="tag">Lightroom</span>
+          <span class="tag">Capture One</span>
+          <span class="tag">50mm</span>
+          <span class="tag">Film Grain</span>
+        </div>
+        <div class="open-indicator">Click to view gallery</div>
+      </div>
+    </div>
+
+    <div class="project-card reveal" data-modal="youtube" tabindex="0" role="button" aria-label="Open YouTube Reel Edits showcase">
+      <div class="project-img-wrap">
+        <img class="project-img-bg" src="https://images.unsplash.com/photo-1574717024453-354056aada02?w=800&q=80" alt="YouTube Reel Edits">
+        <div class="project-img-overlay"></div>
+        <div class="project-category">Editing · Motion</div>
+        <div class="project-year">2025</div>
+      </div>
+      <div class="project-body">
+        <div class="project-title">
+          YouTube Reel Edits
+          <span class="project-arrow">↗</span>
+        </div>
+        <p class="project-desc">A growing collection of short-form edits — punchy cuts, sound design, motion typography, and clean color science for creators.</p>
+        <div class="project-tags">
+          <span class="tag">Premiere Pro</span>
+          <span class="tag">After Effects</span>
+          <span class="tag">DaVinci</span>
+          <span class="tag">Sound Design</span>
+        </div>
+        <div class="open-indicator">Click to view reels</div>
+      </div>
+    </div>
+
+    <div class="project-card reveal" data-modal="gaming" tabindex="0" role="button" aria-label="Open Stream Highlights showcase">
+      <div class="project-img-wrap">
+        <img class="project-img-bg" src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=80" alt="Stream Highlights">
+        <div class="project-img-overlay"></div>
+        <div class="project-category">Gaming</div>
+        <div class="project-year">2024</div>
+      </div>
+      <div class="project-body">
+        <div class="project-title">
+          Stream Highlights
+          <span class="project-arrow">↗</span>
+        </div>
+        <p class="project-desc">High-tempo highlight reels from competitive gameplay — frame-perfect edits, reactive sound design, and cinematic intros.</p>
+        <div class="project-tags">
+          <span class="tag">DaVinci Resolve</span>
+          <span class="tag">OBS</span>
+          <span class="tag">Photoshop</span>
+          <span class="tag">Sound FX</span>
+        </div>
+        <div class="open-indicator">Click to view highlights</div>
+      </div>
+    </div>
+
+    <div class="project-card reveal" data-modal="color" tabindex="0" role="button" aria-label="Open Color Studies showcase">
+      <div class="project-img-wrap">
+        <img class="project-img-bg" src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&q=80" alt="Color Studies">
+        <div class="project-img-overlay"></div>
+        <div class="project-category">Color Grading</div>
+        <div class="project-year">2024</div>
+      </div>
+      <div class="project-body">
+        <div class="project-title">
+          Color Studies
+          <span class="project-arrow">↗</span>
+        </div>
+        <p class="project-desc">A practice journal of cinematic looks — Kodak, Fuji, Arri, and modern teal/orange palettes recreated frame by frame.</p>
+        <div class="project-tags">
+          <span class="tag">DaVinci Resolve</span>
+          <span class="tag">LUTs</span>
+          <span class="tag">Color Wheels</span>
+          <span class="tag">Scopes</span>
+        </div>
+        <div class="open-indicator">Click to view grades</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Experience -->
+<section id="experience">
+  <div class="section-tag reveal">Timeline</div>
+  <div class="exp-grid">
+    <div class="exp-card reveal">
+      <div class="exp-year">2024 — Present</div>
+      <div class="exp-role">Engineering Student</div>
+      <div class="exp-company">BIT College · Electrical &amp; Instrumentation</div>
+      <p class="exp-desc">First-year engineering, balancing academics with a relentless creative practice in photography, editing, and motion.</p>
+    </div>
+    <div class="exp-card reveal">
+      <div class="exp-year">2023 — Present</div>
+      <div class="exp-role">Freelance Photographer &amp; Editor</div>
+      <div class="exp-company">Independent</div>
+      <p class="exp-desc">Shooting portraits, events, and short films for local creators. Editing reels, YouTube content, and gaming highlights.</p>
+    </div>
+    <div class="exp-card reveal">
+      <div class="exp-year">2022 — 2023</div>
+      <div class="exp-role">Self-Taught Creator</div>
+      <div class="exp-company">YouTube · Instagram</div>
+      <p class="exp-desc">Built editing fundamentals through online courses, breakdowns, and obsessive frame-by-frame study of cinema.</p>
+    </div>
+    <div class="exp-card reveal">
+      <div class="exp-year">2021 — Present</div>
+      <div class="exp-role">Gamer &amp; Strategist</div>
+      <div class="exp-company">Competitive Play</div>
+      <p class="exp-desc">Years of strategy gaming sharpening problem-solving, focus, and quick decision-making under pressure.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <div class="reveal">
+    <div class="section-tag">Get in touch</div>
+    <h2 class="contact-heading">
+      LET'S
+      <span class="ghost">CREATE</span>
+      TOGETHER
+    </h2>
+    <div class="contact-info">
+      <a class="contact-item" href="mailto:devarajsindagi4@gmail.com">
+        <div class="ci-icon">✉</div>
+        <div>
+          <span class="ci-label">Email</span>
+          <span class="ci-value">devarajsindagi4@gmail.com</span>
+        </div>
+      </a>
+      <a class="contact-item" href="https://instagram.com/devu_sindagi_37_" target="_blank">
+        <div class="ci-icon">◎</div>
+        <div>
+          <span class="ci-label">Instagram</span>
+          <span class="ci-value">@devu_sindagi_37_</span>
+        </div>
+      </a>
+    </div>
+    <div class="social-row">
+      <a class="social-btn" href="https://instagram.com/devu_sindagi_37_" target="_blank" title="Instagram">◎</a>
+      <a class="social-btn" href="https://github.com/" target="_blank" title="GitHub">⌥</a>
+      <a class="social-btn" href="https://twitter.com/" target="_blank" title="Twitter">𝕏</a>
+      <a class="social-btn" href="https://youtube.com/" target="_blank" title="YouTube">▶</a>
+    </div>
+  </div>
+
+  <div class="reveal">
+    <div class="resume-cta">
+      <h3>Download my Resume</h3>
+      <p>A quick overview of my creative experience, technical skills, and what I'm currently working on. Open to collaborations and freelance projects.</p>
+      <a class="btn-primary" href="https://drive.google.com/file/d/1YwyrFGoJsCkcL-EhG2cGLMigVhdTsn0G/view?usp=drivesdk" target="_blank">
+        ↓ &nbsp; View Resume
+      </a>
+    </div>
+
+    <div class="testimonial-card">
+      <p class="testimonial-quote">Devaraj has an eye for the frame most people miss. His edits feel cinematic without trying too hard — just clean, emotional, and confident.</p>
+      <div class="testimonial-author">Friend &amp; Collaborator — <span>Content Creator</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-copy">© 2025 — All rights reserved</div>
+  <div class="footer-name">DEVARAJ<span> SINDAGI</span></div>
+  <div class="footer-copy">Bengaluru, Karnataka</div>
+</footer>
+
+<!-- ══════════════════════════════════════════
+     ADMIN PANEL CSS (injected inline for self-containment)
+══════════════════════════════════════════ -->
+<style>
+/* ── ADMIN TOGGLE BUTTON ── */
+.admin-toggle {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 7000;
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgba(255,140,58,0.35);
+  background: rgba(8,8,8,0.92);
+  color: var(--amber);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+  transition: all 0.25s;
+  border-radius: 0;
+}
+.admin-toggle:hover { border-color: var(--amber); background: rgba(255,140,58,0.1); }
+.admin-toggle.active { background: rgba(255,140,58,0.15); border-color: var(--amber); color: var(--white); }
+
+/* ── ADMIN PANEL SIDEBAR ── */
+.admin-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 380px;
+  height: 100vh;
+  background: rgba(10,10,10,0.98);
+  border-left: 1px solid var(--border);
+  z-index: 6900;
+  transform: translateX(100%);
+  transition: transform 0.45s cubic-bezier(0.22,1,0.36,1);
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(16px);
+  overflow: hidden;
+}
+.admin-panel.open { transform: translateX(0); }
+.admin-panel-head {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.admin-panel-eyebrow {
+  font-size: 9px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 6px;
+}
+.admin-panel-title {
+  font-family: var(--font-display);
+  font-size: 26px;
+  letter-spacing: 0.04em;
+  color: var(--white);
+}
+.admin-panel-sub {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+  font-weight: 300;
+}
+
+/* Section tabs */
+.admin-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.admin-tab {
+  flex: 1;
+  padding: 12px 4px;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+  font-family: var(--font-body);
+}
+.admin-tab:hover { color: var(--white); }
+.admin-tab.active { color: var(--amber); border-bottom-color: var(--amber); }
+
+/* Panel body */
+.admin-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,140,58,0.2) transparent;
+}
+.admin-body::-webkit-scrollbar { width: 4px; }
+.admin-body::-webkit-scrollbar-thumb { background: rgba(255,140,58,0.2); }
+
+/* Section panel */
+.admin-section { display: none; }
+.admin-section.active { display: block; }
+
+/* Media item in admin */
+.admin-media-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  margin-bottom: 8px;
+  background: rgba(255,255,255,0.015);
+  transition: border-color 0.2s;
+  position: relative;
+}
+.admin-media-item:hover { border-color: rgba(255,140,58,0.35); }
+.admin-media-thumb {
+  width: 56px;
+  height: 40px;
+  object-fit: cover;
+  flex-shrink: 0;
+  filter: saturate(0.6);
+  display: block;
+}
+.admin-media-thumb.video-thumb-icon {
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--amber);
+  font-size: 20px;
+}
+.admin-media-info { flex: 1; min-width: 0; }
+.admin-media-label {
+  font-size: 11px;
+  color: var(--white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 3px;
+  font-weight: 400;
+}
+.admin-media-sub {
+  font-size: 10px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.admin-media-actions { display: flex; gap: 4px; flex-shrink: 0; }
+.admin-action-btn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.admin-action-btn:hover { border-color: var(--amber); color: var(--amber); }
+.admin-action-btn.del:hover { border-color: #e05555; color: #e05555; }
+.admin-action-btn.move-up:hover, .admin-action-btn.move-dn:hover { border-color: var(--amber); color: var(--amber); }
+
+/* Upload zone */
+.admin-upload-zone {
+  border: 1px dashed rgba(255,140,58,0.3);
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: border-color 0.25s, background 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.admin-upload-zone:hover, .admin-upload-zone.drag-over {
+  border-color: var(--amber);
+  background: rgba(255,140,58,0.04);
+}
+.admin-upload-zone input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+.upload-zone-icon { font-size: 24px; color: var(--amber); margin-bottom: 8px; }
+.upload-zone-label { font-size: 11px; color: var(--muted); line-height: 1.5; }
+.upload-zone-label strong { color: var(--white); display: block; margin-bottom: 2px; font-size: 12px; }
+
+/* Video URL input */
+.admin-url-row { margin-bottom: 12px; }
+.admin-input-label {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+  display: block;
+}
+.admin-input {
+  width: 100%;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 12px;
+  padding: 10px 12px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.admin-input:focus { border-color: rgba(255,140,58,0.5); }
+.admin-input::placeholder { color: var(--muted); }
+.admin-input-hint {
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.admin-save-btn {
+  width: 100%;
+  padding: 12px;
+  background: rgba(255,140,58,0.1);
+  border: 1px solid var(--amber);
+  color: var(--amber);
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: all 0.25s;
+}
+.admin-save-btn:hover { background: rgba(255,140,58,0.2); color: var(--white); }
+
+.admin-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 16px 0;
+}
+.admin-section-label {
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.admin-section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.admin-empty {
+  text-align: center;
+  padding: 20px;
+  font-size: 11px;
+  color: var(--muted);
+  border: 1px dashed rgba(255,255,255,0.06);
+}
+
+/* Toast notification */
+.admin-toast {
+  position: fixed;
+  bottom: 88px;
+  right: 28px;
+  background: rgba(255,140,58,0.12);
+  border: 1px solid rgba(255,140,58,0.4);
+  color: var(--amber);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 10px 18px;
+  z-index: 8500;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.3s, transform 0.3s;
+  pointer-events: none;
+}
+.admin-toast.show { opacity: 1; transform: translateY(0); }
+
+/* Edit label inline */
+.admin-media-label[contenteditable="true"] {
+  border-bottom: 1px solid rgba(255,140,58,0.4);
+  outline: none;
+  cursor: text;
+  padding-bottom: 1px;
+}
+
+/* Progress bar for uploads */
+.upload-progress {
+  height: 2px;
+  background: var(--amber);
+  width: 0%;
+  transition: width 0.3s ease;
+  margin-top: 8px;
+}
+</style>
+
+<!-- ══════════════════════════════════════════
+     MODAL BACKDROPS
+══════════════════════════════════════════ -->
+<div class="hvr-modal-backdrop" id="modalBackdrop"></div>
+
+<!-- ══════════════════════════════════════════
+     MODAL 1 · CINEMATIC FRAMES · Photo Lightbox
+══════════════════════════════════════════ -->
+<div class="hvr-modal" id="modal-cinematic" aria-modal="true" role="dialog">
+  <button class="modal-close" id="close-cinematic" aria-label="Close">✕</button>
+  <div class="modal-header">
+    <div class="modal-eyebrow">Photography · 2025</div>
+    <div class="modal-title">CINEMATIC<br>FRAMES</div>
+    <p class="modal-subtitle">A personal photo series exploring light, mood, and Bengaluru after dark — shot on prime lenses, graded for warmth and depth.</p>
+  </div>
+  <div class="upload-notice" id="photo-modal-notice">
+    <div class="upload-notice-icon">◈</div>
+    <p><strong>No photos uploaded yet.</strong> Open the ⚙ media manager (bottom-right) → Photos tab → upload your images. They'll appear here instantly and persist across sessions.</p>
+  </div>
+  <div class="photo-gallery-grid" id="photo-gallery-grid">
+    <!-- dynamically rendered by renderPhotoModal() -->
+  </div>
+</div>
+
+<!-- Full lightbox viewer -->
+<div class="lightbox-viewer" id="lightboxViewer" role="dialog" aria-modal="true">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Close lightbox">✕</button>
+  <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Previous image">‹</button>
+  <div class="lightbox-img-wrap">
+    <img id="lightboxImg" src="" alt="">
+  </div>
+  <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Next image">›</button>
+  <div class="lightbox-caption" id="lightboxCaption"></div>
+  <div class="lightbox-counter" id="lightboxCounter"></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     MODAL 2 · YOUTUBE REEL EDITS · Video Showcase
+══════════════════════════════════════════ -->
+<div class="hvr-modal" id="modal-youtube" aria-modal="true" role="dialog">
+  <button class="modal-close" id="close-youtube" aria-label="Close">✕</button>
+  <div class="modal-header">
+    <div class="modal-eyebrow">Editing · Motion · 2025</div>
+    <div class="modal-title">YOUTUBE<br>REEL EDITS</div>
+    <p class="modal-subtitle">Short-form edits built for impact — punchy cuts, layered sound design, motion typography, and clean color science for creators and brands.</p>
+  </div>
+  <div class="video-showcase" id="modal-youtube-showcase">
+    <!-- dynamically rendered by renderVideoModal() -->
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     MODAL 3 · STREAM HIGHLIGHTS · Gaming
+══════════════════════════════════════════ -->
+<div class="hvr-modal gaming-modal" id="modal-gaming" aria-modal="true" role="dialog">
+  <button class="modal-close" id="close-gaming" aria-label="Close">✕</button>
+  <div class="modal-header">
+    <div class="modal-eyebrow">Gaming · Competitive · 2024</div>
+    <div class="modal-title">STREAM<br>HIGHLIGHTS</div>
+    <p class="modal-subtitle">Frame-perfect highlight reels from competitive gameplay — reactive sound design, cinematic intros, and high-tempo editing built for the audience.</p>
+  </div>
+  <div class="video-showcase" id="modal-gaming-showcase">
+    <!-- dynamically rendered by renderVideoModal() -->
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     MODAL 4 · COLOR STUDIES · Grading
+══════════════════════════════════════════ -->
+<div class="hvr-modal color-modal" id="modal-color" aria-modal="true" role="dialog">
+  <button class="modal-close" id="close-color" aria-label="Close">✕</button>
+  <div class="modal-header">
+    <div class="modal-eyebrow">Color Grading · 2024</div>
+    <div class="modal-title">COLOR<br>STUDIES</div>
+    <p class="modal-subtitle">A practice journal of cinematic looks — Kodak, Fuji, Arri, and modern teal/orange palettes reconstructed frame by frame using DaVinci Resolve.</p>
+  </div>
+  <div class="color-chips">
+    <div class="color-chip" style="background:#ff5e3a;"></div>
+    <div class="color-chip" style="background:#ff8c3a;"></div>
+    <div class="color-chip" style="background:#e8e2d8;"></div>
+    <div class="color-chip" style="background:#2a6b8c;"></div>
+    <div class="color-chip" style="background:#1a3a2e;"></div>
+    <div class="color-chip" style="background:#8b4513;"></div>
+    <div class="color-chip" style="background:#4a3728;"></div>
+    <div class="color-chip" style="background:#c8b89a;"></div>
+    <div class="color-chip" style="background:#3d6b4f;"></div>
+    <div class="color-chip" style="background:#7a4f3a;"></div>
+    <div class="color-chip" style="background:#d96a1f;"></div>
+    <div class="color-chip" style="background:#5a3a28;"></div>
+  </div>
+  <div class="video-showcase" id="modal-color-showcase">
+    <!-- dynamically rendered by renderVideoModal() -->
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ADMIN PANEL
+══════════════════════════════════════════ -->
+<button class="admin-toggle" id="adminToggle" title="Manage Media" aria-label="Open media manager">⚙</button>
+<div class="admin-toast" id="adminToast"></div>
+
+<div class="admin-panel" id="adminPanel" aria-label="Media Manager">
+  <div class="admin-panel-head">
+    <div class="admin-panel-eyebrow">Portfolio CMS</div>
+    <div class="admin-panel-title">MEDIA MANAGER</div>
+    <div class="admin-panel-sub">Upload · Edit · Delete · Reorder — changes save instantly in your browser.</div>
+  </div>
+
+  <div class="admin-tabs">
+    <button class="admin-tab active" data-tab="photos">📷 Photos</button>
+    <button class="admin-tab" data-tab="reels">🎬 Reels</button>
+    <button class="admin-tab" data-tab="gaming">🎮 Gaming</button>
+    <button class="admin-tab" data-tab="color">🎨 Color</button>
+  </div>
+
+  <div class="admin-body">
+
+    <!-- ── PHOTOS TAB ── -->
+    <div class="admin-section active" id="tab-photos">
+      <div class="admin-section-label">Add Photo via URL</div>
+      <div class="admin-url-row">
+        <label class="admin-input-label">Image URL</label>
+        <input class="admin-input" id="photoUrlInput" type="url" placeholder="https://drive.google.com/... or any image URL">
+        <div class="admin-input-hint">
+          Paste a Google Drive share link, Imgur, or any direct image URL.<br>
+          <strong style="color:var(--amber);">Drive tip:</strong> Share → "Anyone with link" → copy link.
+        </div>
+      </div>
+      <div class="admin-url-row">
+        <label class="admin-input-label">Photo Label / Caption</label>
+        <input class="admin-input" id="photoLabelInput" type="text" placeholder="e.g. Frame 001 · Golden Hour">
+      </div>
+      <button class="admin-save-btn" id="addPhotoBtn">+ ADD PHOTO</button>
+      <div class="admin-divider"></div>
+      <div class="admin-section-label">Current Photos</div>
+      <div id="photoList"></div>
+    </div>
+
+    <!-- ── REELS TAB ── -->
+    <div class="admin-section" id="tab-reels">
+      <div class="admin-section-label">Add Reel Video</div>
+      <div class="admin-url-row">
+        <label class="admin-input-label">YouTube or Vimeo URL</label>
+        <input class="admin-input" id="reelUrlInput" type="url" placeholder="https://youtube.com/watch?v=...">
+        <div class="admin-input-hint">Paste any YouTube or Vimeo link — embed is generated automatically.</div>
+      </div>
+      <div class="admin-url-row">
+        <label class="admin-input-label">Video Label / Title</label>
+        <input class="admin-input" id="reelLabelInput" type="text" placeholder="e.g. Short Film Reel 2025">
+      </div>
+      <div class="admin-url-row">
+        <label class="admin-input-label">Tools / Meta line</label>
+        <input class="admin-input" id="reelMetaInput" type="text" placeholder="e.g. Premiere Pro · After Effects">
+      </div>
+      <button class="admin-save-btn" id="addReelBtn">+ ADD REEL VIDEO</button>
+      <div class="admin-divider"></div>
+      <div class="admin-section-label">Current Reels</div>
+      <div id="reelList"></div>
+    </div>
+
+    <!-- ── GAMING TAB ── -->
+    <div class="admin-section" id="tab-gaming">
+      <div class="admin-section-label">Add Gaming Clip</div>
+      <div class="admin-url-row">
+        <label class="admin-input-label">YouTube or Vimeo URL</label>
+        <input class="admin-input" id="gamingUrlInput" type="url" placeholder="https://youtube.com/watch?v=...">
+      </div>
+      <div class="admin-url-row">
+        <label class="admin-input-label">Clip Title</label>
+        <input class="admin-input" id="gamingLabelInput" type="text" placeholder="e.g. Highlight Reel — BGMI">
+      </div>
+      <div class="admin-url-row">
+        <label class="admin-input-label">Tools / Meta line</label>
+        <input class="admin-input" id="gamingMetaInput" type="text" placeholder="e.g. DaVinci · OBS · 2025">
+      </div>
+      <button class="admin-save-btn" id="addGamingBtn" style="border-color:#ff8c3a;color:#ff8c3a;background:rgba(255,140,58,0.06);">+ ADD GAMING CLIP</button>
+      <div class="admin-divider"></div>
+      <div class="admin-section-label">Current Clips</div>
+      <div id="gamingList"></div>
+    </div>
+
+    <!-- ── COLOR TAB ── -->
+    <div class="admin-section" id="tab-color">
+      <div class="admin-section-label">Add Color Grade Video</div>
+      <div class="admin-url-row">
+        <label class="admin-input-label">YouTube or Vimeo URL</label>
+        <input class="admin-input" id="colorUrlInput" type="url" placeholder="https://youtube.com/watch?v=...">
+      </div>
+      <div class="admin-url-row">
+        <label class="admin-input-label">Grade Title</label>
+        <input class="admin-input" id="colorLabelInput" type="text" placeholder="e.g. Kodak Warm · Grade Study">
+      </div>
+      <div class="admin-url-row">
+        <label class="admin-input-label">Badge / Look Name</label>
+        <input class="admin-input" id="colorBadgeInput" type="text" placeholder="e.g. Teal · Orange Palette">
+      </div>
+      <div class="admin-url-row">
+        <label class="admin-input-label">Tools / Meta line</label>
+        <input class="admin-input" id="colorMetaInput" type="text" placeholder="e.g. DaVinci Resolve · LUTs">
+      </div>
+      <button class="admin-save-btn" id="addColorBtn" style="border-color:var(--rust);color:var(--rust);background:rgba(255,94,58,0.06);">+ ADD COLOR GRADE</button>
+      <div class="admin-divider"></div>
+      <div class="admin-section-label">Current Color Studies</div>
+      <div id="colorList"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ── LOADER ──
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('loader').classList.add('hidden');
+    }, 1800);
+  });
+
+  // ── CURSOR ──
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = -100, my = -100, rx = -100, ry = -100;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx - 5 + 'px';
+    cursor.style.top = my - 5 + 'px';
+  });
+  function animateRing() {
+    rx += (mx - rx - 18) * 0.12;
+    ry += (my - ry - 18) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.classList.add('active'); ring.classList.add('active'); });
+    el.addEventListener('mouseleave', () => { cursor.classList.remove('active'); ring.classList.remove('active'); });
+  });
+
+  // ── SCROLL REVEAL ──
+  const reveals = document.querySelectorAll('.reveal');
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        revealObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => revealObs.observe(r));
+
+  // ── SKILL BARS ──
+  const skillObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.skill-fill').forEach(bar => { bar.style.width = bar.dataset.w + '%'; });
+        skillObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  const skillGrid = document.querySelector('.skills-grid');
+  if (skillGrid) skillObs.observe(skillGrid);
+
+  // ════════════════════════════════════════════════
+  // STORAGE — localStorage with base64 photo support
+  // ════════════════════════════════════════════════
+  const STORE_KEYS = { photos: 'hvr_photos', reels: 'hvr_reels', gaming: 'hvr_gaming', color: 'hvr_color' };
+
+  function loadStore(key) {
+    try { return JSON.parse(localStorage.getItem(STORE_KEYS[key])) || []; }
+    catch { return []; }
+  }
+  function saveStore(key, data) {
+    try { localStorage.setItem(STORE_KEYS[key], JSON.stringify(data)); } catch(e) {
+      showToast('Storage full — remove some media first');
+    }
+  }
+
+  // ── TOAST ──
+  function showToast(msg, dur = 2200) {
+    const t = document.getElementById('adminToast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), dur);
+  }
+
+  // ════════════════════════════════════════════════
+  // MODAL SYSTEM
+  // ════════════════════════════════════════════════
+  const backdrop = document.getElementById('modalBackdrop');
+  let activeModal = null;
+
+  function openModal(id) {
+    const modal = document.getElementById('modal-' + id);
+    if (!modal) return;
+    renderModal(id);
+    backdrop.classList.add('open');
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    activeModal = modal;
+    modal.scrollTop = 0;
+    modal.querySelector('.modal-close')?.focus();
+  }
+  function closeModal() {
+    backdrop.classList.remove('open');
+    if (activeModal) { activeModal.classList.remove('open'); activeModal = null; }
+    document.body.style.overflow = '';
+  }
+  document.querySelectorAll('.project-card[data-modal]').forEach(card => {
+    const id = card.dataset.modal;
+    card.addEventListener('click', () => openModal(id));
+    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(id); } });
+  });
+  ['cinematic','youtube','gaming','color'].forEach(id => {
+    const btn = document.getElementById('close-' + id);
+    if (btn) btn.addEventListener('click', closeModal);
+  });
+  backdrop.addEventListener('click', closeModal);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      if (document.getElementById('lightboxViewer').classList.contains('open')) closeLightbox();
+      else closeModal();
+    }
+  });
+
+  // ════════════════════════════════════════════════
+  // VIDEO EMBED PARSER (YouTube + Vimeo)
+  // ════════════════════════════════════════════════
+  function parseVideoEmbed(url) {
+    if (!url) return null;
+    // YouTube
+    let m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+    if (m) return { type: 'youtube', id: m[1], embed: `https://www.youtube.com/embed/${m[1]}?rel=0&modestbranding=1`, thumb: `https://img.youtube.com/vi/${m[1]}/hqdefault.jpg` };
+    // Vimeo
+    m = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+    if (m) return { type: 'vimeo', id: m[1], embed: `https://player.vimeo.com/video/${m[1]}?color=d4a843&title=0&byline=0`, thumb: null };
+    return null;
+  }
+
+  // ════════════════════════════════════════════════
+  // RENDER MODALS from stored data
+  // ════════════════════════════════════════════════
+  const placeholderPhotos = [
+    'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80',
+    'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=900&q=80',
+    'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=900&q=80',
+    'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=900&q=80',
+    'https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=900&q=80',
+  ];
+
+  // Default placeholder videos shown until you add your own via the ⚙ media manager
+  const placeholderVideos = {
+    youtube: [
+      { url: '', label: 'Reel Edit — Vol. 01', meta: 'Premiere Pro · After Effects', badge: '', thumb: 'https://images.unsplash.com/photo-1574717024453-354056aada02?w=800&q=80', placeholder: true },
+      { url: '', label: 'Reel Edit — Vol. 02', meta: 'DaVinci · Sound Design', badge: '', thumb: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&q=80', placeholder: true },
+    ],
+    gaming: [
+      { url: '', label: 'Highlight Reel — Vol. 01', meta: 'DaVinci · OBS', badge: '', thumb: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=80', placeholder: true },
+      { url: '', label: 'Highlight Reel — Vol. 02', meta: 'Photoshop · Sound FX', badge: '', thumb: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&q=80', placeholder: true },
+    ],
+    color: [
+      { url: '', label: 'Kodak · Warm Grade', meta: 'DaVinci Resolve · LUTs', badge: 'Kodak · Warm Tones', thumb: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&q=80', placeholder: true },
+      { url: '', label: 'Teal/Orange · Cinematic', meta: 'Color Wheels · Scopes', badge: 'Teal · Orange Palette', thumb: 'https://images.unsplash.com/photo-1535016120720-40c646be5580?w=800&q=80', placeholder: true },
+    ],
+  };
+
+  function renderModal(id) {
+    if (id === 'cinematic') renderPhotoModal();
+    if (id === 'youtube') renderVideoModal('youtube', 'modal-youtube', 'yt', 'var(--amber)', '');
+    if (id === 'gaming') renderVideoModal('gaming', 'modal-gaming', 'gm', '#ff8c3a', 'gaming-modal');
+    if (id === 'color') renderVideoModal('color', 'modal-color', 'col', 'var(--rust)', 'color-modal');
+  }
+
+  // ── PHOTO MODAL ──
+  function renderPhotoModal() {
+    const photos = loadStore('photos');
+    const grid = document.getElementById('photo-gallery-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    const items = photos.length > 0 ? photos : placeholderPhotos.map((src, i) => ({ src, label: `Frame 00${i+1} · Placeholder`, id: 'ph' + i }));
+    items.forEach((p, i) => {
+      const div = document.createElement('div');
+      div.className = 'photo-thumb';
+      div.dataset.lb = i;
+      div.tabIndex = 0;
+      div.innerHTML = `<img src="${p.src}" alt="${p.label}" loading="lazy"><div class="photo-thumb-overlay"></div><div class="photo-thumb-label">${p.label}</div>`;
+      div.addEventListener('click', () => openLightbox(i, items));
+      div.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(i, items); }});
+      grid.appendChild(div);
+    });
+    // Update notice
+    const notice = document.getElementById('photo-modal-notice');
+    if (notice) notice.style.display = photos.length === 0 ? 'flex' : 'none';
+  }
+
+  // ── VIDEO MODAL ──
+  function renderVideoModal(storeKey, modalId, prefix, accentColor, extraClass) {
+    const stored = loadStore(storeKey);
+    const videos = stored.length > 0 ? stored : placeholderVideos[storeKey];
+    const showcase = document.getElementById(modalId + '-showcase');
+    if (!showcase) return;
+    showcase.innerHTML = '';
+
+    videos.forEach((v, i) => {
+      const parsed = v.url ? parseVideoEmbed(v.url) : null;
+      const isGaming = storeKey === 'gaming';
+      const isColor = storeKey === 'color';
+      const isPlaceholder = !!v.placeholder;
+
+      const card = document.createElement('div');
+      card.className = 'video-card';
+      card.style.position = 'relative';
+      if (isGaming) {
+        card.innerHTML += `<div class="rgb-scanline"></div><div class="rgb-corner tl"></div><div class="rgb-corner tr"></div><div class="rgb-corner bl"></div><div class="rgb-corner br"></div>`;
+      }
+      if (isColor && v.badge) {
+        card.innerHTML += `<div class="grade-badge">${v.badge}</div>`;
+      }
+
+      let playerHtml = '';
+      if (parsed) {
+        // Real video — lazy iframe: show thumbnail first, load iframe on click
+        const thumbSrc = parsed.type === 'youtube' ? parsed.thumb : (v.thumb || 'https://images.unsplash.com/photo-1535016120720-40c646be5580?w=800&q=80');
+        playerHtml = `
+          <div class="video-player-wrap" style="position:relative;">
+            <div class="video-placeholder video-lazy" data-embed="${parsed.embed}" style="cursor:pointer;">
+              <img src="${thumbSrc}" alt="${v.label}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1535016120720-40c646be5580?w=400&q=60'">
+              <div class="video-play-btn" style="border-color:${accentColor};color:${accentColor};">▶</div>
+              <div class="video-placeholder-label">${v.label}</div>
+            </div>
+          </div>`;
+      } else {
+        // Placeholder card — thumbnail only, no embed yet
+        const thumbSrc = v.thumb || 'https://images.unsplash.com/photo-1535016120720-40c646be5580?w=800&q=80';
+        playerHtml = `
+          <div class="video-player-wrap" style="position:relative;">
+            <div class="video-placeholder">
+              <img src="${thumbSrc}" alt="${v.label}" loading="lazy">
+              <div class="video-play-btn" style="border-color:${accentColor};color:${accentColor};">▶</div>
+              <div class="video-placeholder-label">${v.label}${isPlaceholder ? ' · Placeholder' : ''}</div>
+            </div>
+          </div>`;
+      }
+
+      card.innerHTML += `
+        ${playerHtml}
+        <div class="video-info">
+          <div class="video-info-title">${v.label.toUpperCase()}</div>
+          <div class="video-info-meta">${v.meta || ''} · <span style="color:${accentColor};">2025</span></div>
+        </div>`;
+
+      showcase.appendChild(card);
+
+      // Attach lazy-load click only for real videos
+      const lazy = card.querySelector('.video-lazy');
+      if (lazy) {
+        lazy.addEventListener('click', () => {
+          const wrap = lazy.parentElement;
+          const iframe = document.createElement('iframe');
+          iframe.src = lazy.dataset.embed + '&autoplay=1';
+          iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+          iframe.style.cssText = 'width:100%;height:100%;border:none;display:block;position:absolute;inset:0;';
+          wrap.appendChild(iframe);
+          lazy.style.display = 'none';
+        });
+      }
+    });
+
+    // Show a small hint banner if still on placeholders
+    if (stored.length === 0) {
+      const hint = document.createElement('div');
+      hint.className = 'admin-empty';
+      hint.style.cssText = 'grid-column:1/-1;margin-top:8px;border-color:rgba(255,255,255,0.06);';
+      hint.innerHTML = `<div style="font-size:11px;color:var(--muted);">Showing placeholders — open the ⚙ media manager to add your own videos.</div>`;
+      showcase.appendChild(hint);
+    }
+  }
+
+  // ════════════════════════════════════════════════
+  // LIGHTBOX
+  // ════════════════════════════════════════════════
+  const lightboxViewer = document.getElementById('lightboxViewer');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const lightboxCaption = document.getElementById('lightboxCaption');
+  const lightboxCounter = document.getElementById('lightboxCounter');
+  let lbIndex = 0;
+  let lbItems = [];
+
+  function buildCounter() {
+    lightboxCounter.innerHTML = '';
+    lbItems.forEach((_, i) => {
+      const dot = document.createElement('button');
+      dot.className = 'lb-dot' + (i === lbIndex ? ' active' : '');
+      dot.setAttribute('aria-label', 'Photo ' + (i+1));
+      dot.addEventListener('click', () => showLbPhoto(i));
+      lightboxCounter.appendChild(dot);
+    });
+  }
+  function showLbPhoto(idx) {
+    lbIndex = ((idx % lbItems.length) + lbItems.length) % lbItems.length;
+    lightboxImg.style.opacity = '0';
+    lightboxImg.style.transform = 'scale(0.97)';
+    setTimeout(() => {
+      lightboxImg.src = lbItems[lbIndex].src;
+      lightboxImg.alt = lbItems[lbIndex].label;
+      lightboxCaption.textContent = lbItems[lbIndex].label;
+      lightboxImg.style.transition = 'opacity 0.4s ease, transform 0.5s cubic-bezier(0.22,1,0.36,1)';
+      lightboxImg.style.opacity = '1';
+      lightboxImg.style.transform = 'scale(1)';
+      buildCounter();
+    }, 180);
+  }
+  function openLightbox(idx, items) {
+    lbItems = items;
+    lbIndex = idx;
+    lightboxImg.src = lbItems[lbIndex].src;
+    lightboxImg.alt = lbItems[lbIndex].label;
+    lightboxCaption.textContent = lbItems[lbIndex].label;
+    lightboxImg.style.opacity = '1';
+    lightboxImg.style.transform = 'scale(1)';
+    buildCounter();
+    lightboxViewer.classList.add('open');
+    document.getElementById('lightboxClose').focus();
+  }
+  function closeLightbox() { lightboxViewer.classList.remove('open'); }
+
+  document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+  document.getElementById('lightboxPrev').addEventListener('click', () => showLbPhoto(lbIndex - 1));
+  document.getElementById('lightboxNext').addEventListener('click', () => showLbPhoto(lbIndex + 1));
+  document.addEventListener('keydown', e => {
+    if (!lightboxViewer.classList.contains('open')) return;
+    if (e.key === 'ArrowRight') showLbPhoto(lbIndex + 1);
+    if (e.key === 'ArrowLeft') showLbPhoto(lbIndex - 1);
+  });
+  let tsX = 0;
+  lightboxViewer.addEventListener('touchstart', e => { tsX = e.touches[0].clientX; }, {passive:true});
+  lightboxViewer.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - tsX;
+    if (Math.abs(dx) > 50) showLbPhoto(dx < 0 ? lbIndex + 1 : lbIndex - 1);
+  }, {passive:true});
+
+  // ════════════════════════════════════════════════
+  // ADMIN PANEL
+  // ════════════════════════════════════════════════
+  const adminToggle = document.getElementById('adminToggle');
+  const adminPanel = document.getElementById('adminPanel');
+
+  adminToggle.addEventListener('click', () => {
+    const isOpen = adminPanel.classList.toggle('open');
+    adminToggle.classList.toggle('active', isOpen);
+    adminToggle.textContent = isOpen ? '✕' : '⚙';
+    if (isOpen) renderAllAdminLists();
+  });
+
+  // Tabs
+  document.querySelectorAll('.admin-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ── PHOTO URL ADD ──
+  function convertDriveUrl(url) {
+    // Convert Google Drive share link to direct image URL
+    // Format: https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+    const m = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+    if (m) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w1200`;
+    // Already a direct/embed link — return as-is
+    return url;
+  }
+
+  document.getElementById('addPhotoBtn').addEventListener('click', () => {
+    const rawUrl = document.getElementById('photoUrlInput').value.trim();
+    const label  = document.getElementById('photoLabelInput').value.trim() || 'Untitled Frame';
+    if (!rawUrl) { showToast('Paste an image URL first'); return; }
+    const url = convertDriveUrl(rawUrl);
+    const photos = loadStore('photos');
+    photos.push({ src: url, rawUrl, label, id: Date.now() });
+    saveStore('photos', photos);
+    document.getElementById('photoUrlInput').value = '';
+    document.getElementById('photoLabelInput').value = '';
+    renderPhotoAdminList();
+    showToast('Photo added!');
+  });
+
+  document.getElementById('photoUrlInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('addPhotoBtn').click();
+  });
+
+  function renderPhotoAdminList() {
+    const photos = loadStore('photos');
+    const list = document.getElementById('photoList');
+    if (!photos.length) {
+      list.innerHTML = '<div class="admin-empty">No photos yet — add a URL above.</div>';
+      return;
+    }
+    list.innerHTML = '';
+    photos.forEach((p, i) => {
+      const item = document.createElement('div');
+      item.className = 'admin-media-item';
+      item.style.flexDirection = 'column';
+      item.style.alignItems = 'stretch';
+      item.style.gap = '10px';
+      item.innerHTML = `
+        <div style="display:flex;align-items:center;gap:12px;">
+          <img class="admin-media-thumb" src="${p.src}" alt="${p.label}"
+               onerror="this.style.opacity='0.3';this.title='Image failed to load — check the URL'">
+          <div class="admin-media-info" style="flex:1;min-width:0;">
+            <div class="admin-media-label" contenteditable="true"
+                 data-idx="${i}" data-key="photos" data-field="label">${p.label}</div>
+            <div class="admin-media-sub">Photo · URL source</div>
+          </div>
+          <div class="admin-media-actions">
+            <button class="admin-action-btn move-up" data-idx="${i}" data-key="photos" title="Move up">↑</button>
+            <button class="admin-action-btn move-dn" data-idx="${i}" data-key="photos" title="Move down">↓</button>
+            <button class="admin-action-btn del" data-idx="${i}" data-key="photos" title="Delete">✕</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <input class="admin-input photo-url-edit" data-idx="${i}"
+                 style="flex:1;font-size:10px;padding:6px 10px;"
+                 type="url" value="${p.rawUrl || p.src}"
+                 placeholder="Paste new URL to replace image">
+          <button class="admin-action-btn photo-url-save" data-idx="${i}"
+                  style="width:auto;padding:0 10px;font-size:10px;flex-shrink:0;" title="Update URL">↺ Update</button>
+        </div>`;
+      list.appendChild(item);
+    });
+
+    // Delete / reorder
+    attachAdminListHandlers(list, 'photos', renderPhotoAdminList);
+
+    // URL update buttons
+    list.querySelectorAll('.photo-url-save').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.dataset.idx);
+        const input = list.querySelector(`.photo-url-edit[data-idx="${idx}"]`);
+        const rawUrl = input.value.trim();
+        if (!rawUrl) { showToast('URL cannot be empty'); return; }
+        const photos = loadStore('photos');
+        photos[idx].rawUrl = rawUrl;
+        photos[idx].src = convertDriveUrl(rawUrl);
+        saveStore('photos', photos);
+        renderPhotoAdminList();
+        showToast('URL updated!');
+      });
+    });
+
+    // URL input enter key
+    list.querySelectorAll('.photo-url-edit').forEach(input => {
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          const idx = parseInt(input.dataset.idx);
+          list.querySelector(`.photo-url-save[data-idx="${idx}"]`).click();
+        }
+      });
+    });
+
+    // Inline label edit (contenteditable)
+    list.querySelectorAll('[contenteditable="true"]').forEach(el => {
+      el.addEventListener('blur', () => {
+        const idx = parseInt(el.dataset.idx);
+        const photos = loadStore('photos');
+        if (photos[idx]) {
+          photos[idx].label = el.textContent.trim() || photos[idx].label;
+          saveStore('photos', photos);
+          showToast('Label saved');
+        }
+      });
+      el.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); el.blur(); } });
+    });
+  }
+
+  // ── VIDEO ADMIN LISTS ──
+  function addVideo(storeKey, urlInput, labelInput, metaInput, badgeInput, renderFn) {
+    const url = urlInput.value.trim();
+    const label = labelInput.value.trim() || 'Untitled';
+    const meta = metaInput ? metaInput.value.trim() : '';
+    const badge = badgeInput ? badgeInput.value.trim() : '';
+    if (!url) { showToast('Paste a YouTube or Vimeo URL first'); return; }
+    const parsed = parseVideoEmbed(url);
+    if (!parsed) { showToast('Unrecognised URL — use YouTube or Vimeo'); return; }
+    const videos = loadStore(storeKey);
+    videos.push({ url, label, meta, badge, id: Date.now() });
+    saveStore(storeKey, videos);
+    urlInput.value = ''; labelInput.value = ''; if (metaInput) metaInput.value = ''; if (badgeInput) badgeInput.value = '';
+    renderFn();
+    showToast('Video added!');
+  }
+
+  function renderVideoAdminList(storeKey, listId, renderFn) {
+    const videos = loadStore(storeKey);
+    const list = document.getElementById(listId);
+    if (!videos.length) { list.innerHTML = '<div class="admin-empty">No videos yet — add one above.</div>'; return; }
+    list.innerHTML = '';
+    videos.forEach((v, i) => {
+      const parsed = parseVideoEmbed(v.url);
+      const thumbSrc = parsed?.type === 'youtube' ? parsed.thumb : null;
+      const item = document.createElement('div');
+      item.className = 'admin-media-item';
+      item.style.flexDirection = 'column';
+      item.style.alignItems = 'stretch';
+      item.style.gap = '10px';
+      item.innerHTML = `
+        <div style="display:flex;align-items:center;gap:12px;">
+          ${thumbSrc
+            ? `<img class="admin-media-thumb" src="${thumbSrc}" alt="${v.label}" onerror="this.style.display='none'">`
+            : `<div class="admin-media-thumb video-thumb-icon" style="display:flex;align-items:center;justify-content:center;background:#111;color:var(--amber);font-size:20px;">▶</div>`}
+          <div class="admin-media-info" style="flex:1;min-width:0;">
+            <div class="admin-media-label" contenteditable="true" data-idx="${i}" data-key="${storeKey}">${v.label}</div>
+            <div class="admin-media-sub">${parsed ? parsed.type : 'video'} · ${v.meta || ''}</div>
+          </div>
+          <div class="admin-media-actions">
+            <button class="admin-action-btn move-up" data-idx="${i}" data-key="${storeKey}" title="Move up">↑</button>
+            <button class="admin-action-btn move-dn" data-idx="${i}" data-key="${storeKey}" title="Move down">↓</button>
+            <button class="admin-action-btn del" data-idx="${i}" data-key="${storeKey}" title="Delete">✕</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <input class="admin-input video-url-edit" data-idx="${i}"
+                 style="flex:1;font-size:10px;padding:6px 10px;"
+                 type="url" value="${v.url}" placeholder="Paste new YouTube/Vimeo URL">
+          <button class="admin-action-btn video-url-save" data-idx="${i}" data-key="${storeKey}"
+                  style="width:auto;padding:0 10px;font-size:10px;flex-shrink:0;">↺ Update</button>
+        </div>`;
+      list.appendChild(item);
+    });
+
+    attachAdminListHandlers(list, storeKey, renderFn);
+
+    // URL update
+    list.querySelectorAll('.video-url-save').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.dataset.idx);
+        const key = btn.dataset.key;
+        const input = list.querySelector(`.video-url-edit[data-idx="${idx}"]`);
+        const url = input.value.trim();
+        if (!url) { showToast('URL cannot be empty'); return; }
+        const parsed = parseVideoEmbed(url);
+        if (!parsed) { showToast('Use a YouTube or Vimeo URL'); return; }
+        const data = loadStore(key);
+        data[idx].url = url;
+        saveStore(key, data);
+        renderFn();
+        showToast('URL updated!');
+      });
+    });
+    list.querySelectorAll('.video-url-edit').forEach(input => {
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          const idx = parseInt(input.dataset.idx);
+          list.querySelector(`.video-url-save[data-idx="${idx}"]`).click();
+        }
+      });
+    });
+
+    // Inline label (contenteditable)
+    list.querySelectorAll('[contenteditable="true"]').forEach(el => {
+      el.addEventListener('blur', () => {
+        const idx = parseInt(el.dataset.idx);
+        const data = loadStore(storeKey);
+        if (data[idx]) { data[idx].label = el.textContent.trim() || data[idx].label; saveStore(storeKey, data); showToast('Label saved'); }
+      });
+      el.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); el.blur(); } });
+    });
+  }
+
+  // ── SHARED ADMIN HANDLERS (delete + reorder only — label editing handled per renderFn) ──
+  function attachAdminListHandlers(list, storeKey, renderFn) {
+    list.querySelectorAll('.admin-action-btn.del').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.dataset.idx);
+        const data = loadStore(storeKey);
+        data.splice(idx, 1);
+        saveStore(storeKey, data);
+        renderFn();
+        showToast('Removed');
+      });
+    });
+    list.querySelectorAll('.admin-action-btn.move-up').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.dataset.idx);
+        if (idx === 0) return;
+        const data = loadStore(storeKey);
+        [data[idx-1], data[idx]] = [data[idx], data[idx-1]];
+        saveStore(storeKey, data);
+        renderFn();
+      });
+    });
+    list.querySelectorAll('.admin-action-btn.move-dn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.dataset.idx);
+        const data = loadStore(storeKey);
+        if (idx >= data.length - 1) return;
+        [data[idx], data[idx+1]] = [data[idx+1], data[idx]];
+        saveStore(storeKey, data);
+        renderFn();
+      });
+    });
+  }
+
+  // ── WIRE UP VIDEO ADD BUTTONS ──
+  document.getElementById('addReelBtn').addEventListener('click', () =>
+    addVideo('reels', document.getElementById('reelUrlInput'), document.getElementById('reelLabelInput'), document.getElementById('reelMetaInput'), null, renderReelAdminList));
+  document.getElementById('addGamingBtn').addEventListener('click', () =>
+    addVideo('gaming', document.getElementById('gamingUrlInput'), document.getElementById('gamingLabelInput'), document.getElementById('gamingMetaInput'), null, renderGamingAdminList));
+  document.getElementById('addColorBtn').addEventListener('click', () =>
+    addVideo('color', document.getElementById('colorUrlInput'), document.getElementById('colorLabelInput'), document.getElementById('colorMetaInput'), document.getElementById('colorBadgeInput'), renderColorAdminList));
+
+  // Allow pressing Enter on URL inputs
+  ['reelUrlInput','gamingUrlInput','colorUrlInput'].forEach(id => {
+    document.getElementById(id)?.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        if (id === 'reelUrlInput') document.getElementById('addReelBtn').click();
+        if (id === 'gamingUrlInput') document.getElementById('addGamingBtn').click();
+        if (id === 'colorUrlInput') document.getElementById('addColorBtn').click();
+      }
+    });
+  });
+
+  function renderReelAdminList() { renderVideoAdminList('reels', 'reelList', renderReelAdminList); }
+  function renderGamingAdminList() { renderVideoAdminList('gaming', 'gamingList', renderGamingAdminList); }
+  function renderColorAdminList() { renderVideoAdminList('color', 'colorList', renderColorAdminList); }
+
+  function renderAllAdminLists() {
+    renderPhotoAdminList();
+    renderReelAdminList();
+    renderGamingAdminList();
+    renderColorAdminList();
+  }
+</script>
+</body>
+</html>
